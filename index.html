@@ -1,0 +1,1921 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panga Crew ポケットガイド</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <style>
+        :root {
+            /* メインカラーはより洗練された色調へ */
+            --panga-primary: #e63b5b;
+            /* 鮮やかで洗練されたレッド */
+            --panga-primary-light: #ff7087;
+            /* プライマリの明るいバリエーション */
+            --panga-primary-dark: #c62b49;
+            /* プライマリの暗いバリエーション */
+            --panga-primary-alpha: rgba(230, 59, 91, 0.05);
+            /* 透明度付きプライマリ */
+
+            --panga-secondary: #3d78c2;
+            /* 深みのあるブルー */
+            --panga-secondary-light: #6fa5e8;
+            /* セカンダリの明るいバリエーション */
+            --panga-secondary-dark: #2a5a9c;
+            /* セカンダリの暗いバリエーション */
+
+            /* アクセントカラーも洗練された配色へ */
+            --panga-accent1: #49b58e;
+            /* 明るく洗練されたグリーン */
+            --panga-accent2: #f2994a;
+            /* 温かみのあるオレンジ */
+            --panga-accent3: #8a5cd9;
+            /* 高級感のあるパープル */
+
+            /* 背景とテキスト */
+            --panga-bg-light: #f8f9fa;
+            /* モダンで清潔感のある背景色 */
+            --panga-bg-white: #ffffff;
+            /* 純白 */
+            --panga-text: #2d3748;
+            /* 読みやすく深みのあるグレー */
+            --panga-light-text: #718096;
+            /* 洗練された薄めのテキスト色 */
+
+            /* ニュートラルカラー */
+            --panga-gray-100: #f7fafc;
+            --panga-gray-200: #edf2f7;
+            --panga-gray-300: #e2e8f0;
+            --panga-gray-400: #cbd5e0;
+
+            /* 影とエレベーション */
+            --panga-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+            --panga-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --panga-shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.12);
+            --panga-shadow-hover: 0 14px 30px rgba(0, 0, 0, 0.15);
+
+            /* アニメーション */
+            --panga-transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --panga-transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --panga-transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+
+            /* 境界半径 */
+            --panga-radius-sm: 8px;
+            --panga-radius-md: 12px;
+            --panga-radius-lg: 16px;
+            --panga-radius-full: 9999px;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: var(--panga-bg-light);
+            color: var(--panga-text);
+            overflow-x: hidden;
+            line-height: 1.6;
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ヘッダースタイル改良 */
+        .navbar-fixed {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        nav {
+            background-color: var(--panga-primary);
+            box-shadow: var(--panga-shadow-md);
+            transition: background-color var(--panga-transition-normal);
+        }
+
+        nav.scrolled {
+            background-color: rgba(230, 59, 91, 0.95);
+        }
+
+        nav .brand-logo {
+            font-weight: 700;
+            padding: 0 15px;
+            letter-spacing: 0.5px;
+            transition: transform var(--panga-transition-fast);
+        }
+
+        nav .brand-logo:hover {
+            transform: translateY(-2px);
+        }
+
+        /* セクションスタイル改良 */
+        .section {
+            padding: 30px 0;
+            margin: 20px 0;
+            border-radius: var(--panga-radius-md);
+            transition: transform var(--panga-transition-normal), opacity var(--panga-transition-normal);
+            position: relative;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-header {
+            color: var(--panga-primary);
+            font-weight: 700;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--panga-primary);
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .section-header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 70px;
+            height: 2px;
+            transform-origin: left;
+            transition: width 0.4s ease;
+        }
+
+        .section:hover .section-header::after {
+            width: 100%;
+        }
+
+        /* カードスタイル改良 */
+        .card {
+            border-radius: var(--panga-radius-md);
+            box-shadow: var(--panga-shadow-md);
+            transition: transform var(--panga-transition-slow), box-shadow var(--panga-transition-normal);
+            height: 100%;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            background-color: var(--panga-bg-white);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+            opacity: 0;
+            transition: opacity var(--panga-transition-normal);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--panga-shadow-hover);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card:active {
+            transform: scale(0.98) translateY(-8px);
+            transition: transform 0.2s ease;
+        }
+
+        .card .card-title {
+            font-weight: 700;
+            font-size: 1.3rem;
+            padding: 18px 20px;
+            margin: 0;
+            border-radius: var(--panga-radius-md) var(--panga-radius-md) 0 0;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card .card-title::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 30px;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.2) 100%);
+            transform: skewX(-15deg) translateX(60px);
+            transition: transform 0.5s ease;
+        }
+
+        .card:hover .card-title::after {
+            transform: skewX(-15deg) translateX(-30px);
+        }
+
+        .card .card-content {
+            padding: 25px;
+            position: relative;
+        }
+
+        /* カラーテーマ改良 */
+        .primary-theme .card-title {
+            background-color: var(--panga-primary);
+            color: white;
+        }
+
+        .secondary-theme .card-title {
+            background-color: var(--panga-secondary);
+            color: white;
+        }
+
+        .accent1-theme .card-title {
+            background-color: var(--panga-accent1);
+            color: white;
+        }
+
+        .accent2-theme .card-title {
+            background-color: var(--panga-accent2);
+            color: white;
+        }
+
+        .accent3-theme .card-title {
+            background-color: var(--panga-accent3);
+            color: white;
+        }
+
+        /* リストスタイル改良 */
+        .panga-list {
+            padding-left: 10px;
+            list-style-type: none;
+        }
+
+        .panga-list li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        .panga-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--panga-primary);
+            transition: transform var(--panga-transition-fast), background-color var(--panga-transition-fast);
+        }
+
+        .panga-list li:hover::before {
+            transform: scale(1.2);
+            background-color: var(--panga-primary-dark);
+        }
+
+        .numbered-list {
+            padding-left: 10px;
+            counter-reset: item;
+            list-style-type: none;
+        }
+
+        .numbered-list li {
+            position: relative;
+            counter-increment: item;
+            margin-bottom: 16px;
+            line-height: 1.6;
+            padding-left: 30px;
+        }
+
+        .numbered-list li::before {
+            content: counter(item);
+            position: absolute;
+            left: 0;
+            top: 1px;
+            color: var(--panga-bg-white);
+            font-weight: 600;
+            background-color: var(--panga-primary);
+            width: 22px;
+            height: 22px;
+            border-radius: var(--panga-radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            transition: transform var(--panga-transition-fast), background-color var(--panga-transition-fast);
+        }
+
+        .numbered-list li:hover::before {
+            transform: scale(1.1);
+            background-color: var(--panga-primary-dark);
+        }
+
+        /* アイコンスタイル改良 */
+        .card .material-icons {
+            margin-right: 10px;
+            opacity: 0.9;
+            transition: transform var(--panga-transition-fast);
+        }
+
+        .card:hover .material-icons {
+            transform: translateY(-2px);
+        }
+
+        /* 折りたたみ要素改良 */
+        .collapsible {
+            border: none;
+            box-shadow: none;
+            margin: 0;
+        }
+
+        .collapsible-header.active+.collapsible-body {
+            max-height: 1000px;
+            /* 十分な高さを確保 */
+            opacity: 1;
+            padding: 20px;
+        }
+
+        .collapsible-header {
+            border: none;
+            padding: 18px 20px;
+            background-color: var(--panga-bg-white);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            border-radius: var(--panga-radius-md);
+            margin-bottom: 8px;
+            box-shadow: var(--panga-shadow-sm);
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .collapsible-header::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background-color: var(--panga-primary);
+            opacity: 0;
+            transition: opacity var(--panga-transition-normal);
+        }
+
+        .collapsible-header:hover {
+            background-color: var(--panga-primary-alpha);
+            box-shadow: var(--panga-shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .collapsible-header:hover::before,
+        .collapsible-header.active::before {
+            opacity: 1;
+        }
+
+        .collapsible-header .material-icons {
+            margin-right: 12px;
+            transition: transform var(--panga-transition-normal);
+            color: var(--panga-primary);
+        }
+
+        .collapsible-header.active {
+            background-color: var(--panga-primary-alpha);
+            box-shadow: var(--panga-shadow-md);
+        }
+
+        .collapsible-header.active .material-icons.expand {
+            transform: rotate(180deg);
+        }
+
+        .collapsible-body {
+            transition: max-height 0.3s ease, padding 0.2s ease, opacity 0.3s ease;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            padding: 0 20px;
+            margin-top: -8px;
+            z-index: 1;
+        }
+
+        /* 目次スタイル改良 */
+        .table-of-contents {
+            position: fixed;
+            top: 64px;
+            height: calc(100vh - 64px);
+            padding: 20px 0;
+            overflow-y: auto;
+            width: 280px;
+            background-color: var(--panga-bg-white);
+            box-shadow: var(--panga-shadow-lg);
+            transform: translateX(-100%);
+            transition: transform var(--panga-transition-normal);
+            z-index: 990;
+            border-radius: 0 var(--panga-radius-md) var(--panga-radius-md) 0;
+        }
+
+        .table-of-contents.visible {
+            transform: translateX(0);
+        }
+
+        .table-of-contents li {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: all var(--panga-transition-normal);
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin: 4px 0;
+        }
+
+        .table-of-contents li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background-color: var(--panga-primary);
+            opacity: 0;
+            transition: opacity var(--panga-transition-normal);
+        }
+
+        .table-of-contents li:hover {
+            background-color: var(--panga-primary-alpha);
+            transform: translateX(4px);
+        }
+
+        .table-of-contents li.active {
+            background-color: var(--panga-primary-alpha);
+            font-weight: 500;
+        }
+
+        .table-of-contents li.active::before,
+        .table-of-contents li:hover::before {
+            opacity: 1;
+        }
+
+        .table-of-contents li .material-icons {
+            margin-right: 8px;
+            font-size: 16px;
+            color: var(--panga-primary);
+        }
+
+        /* 進行状況バー改良 */
+        .progress-container {
+            position: fixed;
+            top: 64px;
+            width: 100%;
+            height: 4px;
+            background-color: rgba(255, 255, 255, 0.3);
+            z-index: 995;
+        }
+
+        .progress-bar {
+            height: 4px;
+            width: 0%;
+            background: linear-gradient(90deg, var(--panga-primary) 0%, var(--panga-accent2) 100%);
+            transition: width var(--panga-transition-normal);
+            position: relative;
+            border-radius: 0 var(--panga-radius-full) var(--panga-radius-full) 0;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 15px;
+            height: 15px;
+            background: var(--panga-accent2);
+            border-radius: 50%;
+            transform: translate(50%, -38%);
+            box-shadow: 0 0 10px var(--panga-accent2);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .progress-bar.active::after {
+            opacity: 1;
+        }
+
+        /* トップに戻るボタン改良 */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--panga-primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: var(--panga-radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--panga-shadow-lg);
+            opacity: 0;
+            transform: translateY(20px) scale(0.9);
+            transition: all var(--panga-transition-normal);
+            z-index: 980;
+            overflow: hidden;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .back-to-top:hover {
+            background-color: var(--panga-primary-dark);
+            box-shadow: var(--panga-shadow-hover);
+            transform: translateY(-5px) scale(1.05);
+        }
+
+        .back-to-top::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 70%);
+            transform: scale(0);
+            transition: transform 0.5s ease;
+        }
+
+        .back-to-top:hover::before {
+            transform: scale(2);
+        }
+
+        /* カード内の特定スタイル改良 */
+        .card-panel {
+            border-radius: var(--panga-radius-md);
+            box-shadow: var(--panga-shadow-sm);
+            transition: all var(--panga-transition-normal);
+            background-color: rgba(242, 153, 74, 0.05);
+            border-left: 4px solid var(--panga-accent2);
+        }
+
+        .card-panel:hover {
+            box-shadow: var(--panga-shadow-md);
+            transform: translateY(-3px);
+        }
+
+        #section-chikai {
+            margin-top: 40px;
+            /* ヘッダーからの距離を増やす */
+            padding-top: 30px;
+            /* 内側の余白も追加 */
+        }
+
+        /* アニメーションクラス改良 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.95);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .fade-up {
+            animation: fadeInUp 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+        }
+
+        .scale-in {
+            animation: scaleIn 0.6s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+        }
+
+        .fade-left {
+            animation: fadeInLeft 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+        }
+
+        /* 遅延アニメーション用クラス */
+        .delay-1 {
+            animation-delay: 0.1s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-3 {
+            animation-delay: 0.3s;
+        }
+
+        .delay-4 {
+            animation-delay: 0.4s;
+        }
+
+        .delay-5 {
+            animation-delay: 0.5s;
+        }
+
+        /* プリローダー改良 */
+        .preloader-wrapper {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+        }
+
+        .preloader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--panga-bg-white);
+            z-index: 9998;
+            opacity: 1;
+            transition: opacity 0.6s ease;
+        }
+
+        .preloader-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* レスポンシブ調整 */
+        @media only screen and (max-width: 992px) {
+            nav .brand-logo {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            nav .brand-logo:hover {
+                transform: translateX(-50%) translateY(-2px);
+            }
+
+            .container {
+                width: 95%;
+            }
+
+            .table-of-contents {
+                width: 250px;
+            }
+        }
+
+        @media only screen and (max-width: 600px) {
+            #section-chikai {
+                margin-top: 30px;
+                padding-top: 20px;
+            }
+
+            .section {
+                padding: 15px 0;
+                /* 上下のパディングを縮小 */
+                margin: 10px 0;
+                /* 上下のマージンを縮小 */
+            }
+
+            .row {
+                margin-bottom: 10px;
+                /* 行間の余白も縮小 */
+            }
+
+            .card {
+                margin-bottom: 12px;
+                /* カード間の余白も調整 */
+            }
+
+            nav .brand-logo {
+                font-size: 1.2rem;
+            }
+
+            .card .card-title {
+                font-size: 1.1rem;
+            }
+
+            .section-header {
+                font-size: 1.5rem;
+            }
+
+            .back-to-top {
+                bottom: 20px;
+                right: 20px;
+                width: 45px;
+                height: 45px;
+            }
+
+            .panga-list li,
+            .numbered-list li {
+                margin-bottom: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Preloader -->
+    <div class="preloader-overlay">
+        <div class="preloader-wrapper big active">
+            <div class="spinner-layer spinner-red-only">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div>
+                <div class="gap-patch">
+                    <div class="circle"></div>
+                </div>
+                <div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="navbar-fixed">
+        <nav>
+            <div class="nav-wrapper">
+                <a href="#" class="brand-logo center truncate nav-title">Panga Crew ポケットガイド</a>
+                <a href="#" class="sidenav-trigger show-on-medium-and-up" data-target="toc-sidenav">
+                    <i class="material-icons">menu</i>
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Table of Contents Sidenav -->
+    <ul id="toc-sidenav" class="table-of-contents">
+        <li class="toc-item active" data-target="section-chikai"><i class="material-icons tiny">bookmark</i> 私たちの誓い</li>
+        <li class="toc-item" data-target="section-omoi"><i class="material-icons tiny">bookmark</i> 私たちの想い</li>
+        <li class="toc-item" data-target="section-kokoro"><i class="material-icons tiny">bookmark</i> 大切にしたい3つの心</li>
+        <li class="toc-item" data-target="section-kihon"><i class="material-icons tiny">bookmark</i> 接客の基本</li>
+        <li class="toc-item" data-target="section-area"><i class="material-icons tiny">bookmark</i> エリア別の基本</li>
+        <li class="toc-item" data-target="section-koudou"><i class="material-icons tiny">bookmark</i> 私たちの行動指針</li>
+        <li class="toc-item" data-target="section-team"><i class="material-icons tiny">bookmark</i> チーム力を高める関わり方</li>
+        <li class="toc-item" data-target="section-leader"><i class="material-icons tiny">bookmark</i> チームリーダーの心得</li>
+        <li class="toc-item" data-target="section-customer"><i class="material-icons tiny">bookmark</i> お客様第一のサービス姿勢
+        </li>
+        <li class="toc-item" data-target="section-claim"><i class="material-icons tiny">bookmark</i> クレーム対応の基本</li>
+        <li class="toc-item" data-target="section-emergency"><i class="material-icons tiny">bookmark</i> 緊急時の対応</li>
+        <li class="toc-item" data-target="section-contact"><i class="material-icons tiny">bookmark</i> 大切な連絡先</li>
+        <li class="toc-item" data-target="section-daily"><i class="material-icons tiny">bookmark</i> 毎日の心がけ</li>
+    </ul>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- 私たちの誓い -->
+        <div class="section" id="section-chikai">
+            <h2 class="section-header">私たちの誓い</h2>
+
+            <div class="row">
+                <div class="col s12 m6">
+                    <div class="card primary-theme scale-in">
+                        <div class="card-title">
+                            <i class="material-icons">campaign</i>スローガン
+                        </div>
+                        <div class="card-content">
+                            <ul class="panga-list">
+                                <li>私たちはPanga Crewです</li>
+                                <li>私たちPanga Crewは、常におもてなしを大切にします</li>
+                                <li>私たちPanga Crewは、温かな笑顔をお届けします</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col s12 m6">
+                    <div class="card primary-theme scale-in">
+                        <div class="card-title">
+                            <i class="material-icons">record_voice_over</i>接客８大用語
+                        </div>
+                        <div class="card-content">
+                            <ol class="numbered-list">
+                                <li>いらっしゃいませ</li>
+                                <li>少々お待ちください</li>
+                                <li>かしこまりました</li>
+                                <li>申し訳ございません</li>
+                                <li>お待たせいたしました</li>
+                                <li>恐れ入ります</li>
+                                <li>失礼いたします</li>
+                                <li>ありがとうございます</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 私たちの想い -->
+        <div class="section" id="section-omoi">
+            <h2 class="section-header">私たちの想い</h2>
+
+            <div class="row">
+                <div class="col s12 m4">
+                    <div class="card secondary-theme scale-in">
+                        <div class="card-title">
+                            <i class="material-icons">flag</i>Mission - 使命
+                        </div>
+                        <div class="card-content">
+                            <p class="flow-text center-align">韓国の味と温もりを、一人ひとりの日常に</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col s12 m4">
+                    <div class="card secondary-theme scale-in">
+                        <div class="card-title">
+                            <i class="material-icons">handshake</i>Promise - お客様への約束
+                        </div>
+                        <div class="card-content">
+                            <p class="flow-text center-align">一期一会の出会いを、かけがえのない思い出に</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col s12 m4">
+                    <div class="card secondary-theme scale-in">
+                        <div class="card-title">
+                            <i class="material-icons">military_tech</i>Pride - 誇り
+                        </div>
+                        <div class="card-content">
+                            <p class="flow-text center-align">私たちは韓国の食文化を伝える「ブランドアンバサダー」です</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 大切にしたい3つの心 -->
+        <div class="section" id="section-kokoro">
+            <h2 class="section-header">大切にしたい3つの心</h2>
+
+            <div class="row">
+                <div class="col s12 m4">
+                    <div class="card accent1-theme scale-in">
+                        <div class="card-title">
+                            <i class="material-icons">favorite</i>おもてなしの心
+                        </div>
+                        <div class="card-content">
+                            <ul class="panga-list">
+                                <li>お客様一人ひとりと真摯に向き合う</li>
+                                <li>笑顔で温かな雰囲気を作る</li>
+                                <li>常に相手の立場で考える</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col s12 m4">
+                    <div class="card accent1-theme scale-in">
+                        <div class="card-title">
+                            <i class="material-icons">people</i>共に育つ心
+                        </div>
+                        <div class="card-content">
+                            <ul class="panga-list">
+                                <li>チームメンバーを思いやる</li>
+                                <li>積極的に助け合う</li>
+                                <li>日々の学びを大切にする</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col s12 m4">
+                    <div class="card accent1-theme scale-in">
+                        <div class="card-title">
+                            <i class="material-icons">star</i>挑戦する心
+                        </div>
+                        <div class="card-content">
+                            <ul class="panga-list">
+                                <li>より良い方法を考える</li>
+                                <li>新しいアイデアを提案する</li>
+                                <li>失敗を恐れない</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 接客の基本 -->
+        <div class="section" id="section-kihon">
+            <h2 class="section-header">接客の基本</h2>
+
+            <div class="row">
+                <div class="col s12 m4">
+                    <div class="card accent2-theme scale-in">
+                        <div class="card-title">
+                            <i class="material-icons">emoji_people</i>出会いの瞬間
+                        </div>
+                        <div class="card-content">
+                            <ul class="panga-list">
+                                <li>明るく元気な「いらっしゃいませ」</li>
+                                <li>お客様の目を見て挨拶</li>
+                                <li>自然な笑顔を忘れずに</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col s12 m4">
+                    <div class="card accent2-theme scale-in">
+                        <div class="card-title">
+                            <i class="material-icons">chat</i>対話のポイント
+                        </div>
+                        <div class="card-content">
+                            <ul class="panga-list">
+                                <li>丁寧な言葉遣い</li>
+                                <li>積極的な傾聴</li>
+                                <li>分かりやすい説明</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col s12 m4">
+                    <div class="card accent2-theme scale-in">
+                        <div class="card-title">
+                            <i class="material-icons">volunteer_activism</i>感謝の気持ち
+                        </div>
+                        <div class="card-content">
+                            <ul class="panga-list">
+                                <li>心からの「ありがとうございます」</li>
+                                <li>また来たいと思っていただける対応</li>
+                                <li>最後まで笑顔で</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- エリア別の基本 -->
+        <div class="section" id="section-area">
+            <h2 class="section-header">エリア別の基本</h2>
+
+            <ul class="collapsible">
+                <li>
+                    <div class="collapsible-header">
+                        <i class="material-icons">shopping_cart</i>ショップエリア
+                        <i class="material-icons expand right">expand_more</i>
+                    </div>
+                    <div class="collapsible-body">
+                        <ul class="panga-list">
+                            <li>お客様の用途や好みを丁寧に聞き取り、最適な商品を提案</li>
+                            <li>商品の陳列状態を常に確認し、魅力的な売場づくりを心がける</li>
+                            <li>レストランで提供しているメニューと関連商品を積極的に紹介</li>
+                            <li>「この商品はレストランで食べられます」と具体的に説明する</li>
+                            <li>韓国の食文化や商品の背景も伝え、Pangaならではの価値を提供</li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li>
+                    <div class="collapsible-header">
+                        <i class="material-icons">restaurant</i>レストランエリア
+                        <i class="material-icons expand right">expand_more</i>
+                    </div>
+                    <div class="collapsible-body">
+                        <ul class="panga-list">
+                            <li>メニューに使用されているショップ商品を具体的に案内</li>
+                            <li>「このメニューはショップで販売している○○を使っています」と積極的に伝える</li>
+                            <li>レシピカードの提供やショップでの購入方法も説明</li>
+                            <li>お客様の「作ってみたい」という意欲を引き出す提案を心がける</li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li>
+                    <div class="collapsible-header">
+                        <i class="material-icons">local_cafe</i>カフェエリア
+                        <i class="material-icons expand right">expand_more</i>
+                    </div>
+                    <div class="collapsible-body">
+                        <ul class="panga-list">
+                            <li>「分かち合いの情」を体現する温かなサービスを心がける</li>
+                            <li>ドリンクやデザートの特徴を簡潔に説明</li>
+                            <li>テイクアウト商品の提案も積極的に行う</li>
+                            <li>ショップの商品やレストランメニューとの相性も提案</li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li>
+                    <div class="collapsible-header">
+                        <i class="material-icons">refresh</i>エリア間連携の重要性
+                        <i class="material-icons expand right">expand_more</i>
+                    </div>
+                    <div class="collapsible-body">
+                        <ul class="panga-list">
+                            <li>ショップとレストランは「商品と体験の循環」を生み出す関係</li>
+                            <li>レストランは商品の「ショーケース」として実際の使用例を提示</li>
+                            <li>ショップはレストランでの体験を「家庭で再現できる場」として案内</li>
+                            <li>お客様の質問には両エリアの知識を活用して答える</li>
+                            <li>常に他エリアの最新情報をアップデートし、全体のPanga体験を提供する</li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 私たちの行動指針 -->
+        <div class="section" id="section-koudou">
+            <h2 class="section-header">私たちの行動指針</h2>
+            <h4>常に意識したい5つのこと</h4>
+
+            <div class="row">
+                <div class="col s12 m6 l4">
+                    <div class="card secondary-theme scale-in">
+                        <div class="card-title">
+                            <i class="material-icons">spa</i>1. 清潔感
+                        </div>
+                        <div class="card-content">
+                            <ul class="panga-list">
+                                <li>身だしなみを整える</li>
+                                <li>店内の清掃</li>
+                                <li>商品の整理整頓</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col s12 m6 l4">
+                    <div class="card secondary-theme scale-in">
+                        <div class="card-title">
+                            <i class="material-icons">group_work</i>2. 協調性
+                        </div>
+                        <div class="card-content">
+                            <ul class="panga-list">
+                                <li>チーム間の連携</li>
+                                <li>情報の共有</li>
+                                <li>助け合いの精神</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col s12 m6 l4">
+                    <div class="card secondary-theme scale-in">
+                        <div class="card-title">
+                            <i class="material-icons">bolt</i>3. 積極性
+                        </div>
+                        <div class="card-content">
+                            <ul class="panga-list">
+                                <li>自主的な行動</li>
+                                <li>気配りの実践</li>
+                                <li>提案する姿勢</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col s12 m6 l4 offset-l2">
+                    <div class="card secondary-theme scale-in">
+                        <div class="card-title">
+                            <i class="material-icons">verified</i>4. 正確性
+                        </div>
+                        <div class="card-content">
+                            <ul class="panga-list">
+                                <li>商品知識の習得</li>
+                                <li>確実な作業</li>
+                                <li>約束の遵守</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col s12 m6 l4">
+                    <div class="card secondary-theme scale-in">
+                        <div class="card-title">
+                            <i class="material-icons">lightbulb</i>5. 創造性
+                        </div>
+                        <div class="card-content">
+                            <ul class="panga-list">
+                                <li>新しい提案</li>
+                                <li>改善意識</li>
+                                <li>お客様目線</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- チーム力を高める関わり方 -->
+        <div class="section" id="section-team">
+            <h2 class="section-header">チーム力を高める関わり方</h2>
+
+            <div class="row">
+                <div class="col s12 m6">
+                    <div class="card accent2-theme scale-in">
+                        <div class="card-title">
+                            <i class="material-icons">forum</i>スタッフ間のコミュニケーション
+                        </div>
+                        <div class="card-content">
+                            <ul class="panga-list">
+                                <li>お互いを「○○さん」と呼び、敬意を持った言葉遣いを心がける</li>
+                                <li>出勤時と退勤時には必ず挨拶を交わす</li>
+                                <li>情報共有は具体的かつ簡潔に行い、相手の理解を確認する</li>
+                                <li>忙しい時こそ「ありがとう」の言葉を大切にする</li>
+                                <li>エリアを超えて助け合い、全員でPanga体験を創る意識を持つ</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col s12 m6">
+                    <div class="card accent2-theme scale-in">
+                        <div class="card-title">
+                            <i class="material-icons">psychology</i>建設的な問題解決のために
+                        </div>
+                        <div class="card-content">
+                            <ul class="panga-list">
+                                <li>不満や課題は「改善点」として前向きに捉える</li>
+                                <li>問題を指摘する際は必ず改善案も一緒に提案する</li>
+                                <li>感情的にならず、事実に基づいて話し合う</li>
+                                <li>人ではなく課題に焦点を当てて議論する</li>
+                                <li>1対1での対話を基本とし、第三者を介入させない</li>
+                                <li>解決が難しい場合は速やかにリーダーに相談する</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    <div class="card accent2-theme scale-in">
+                        <div class="card-title">
+                            <i class="material-icons">psychology_alt</i>問題解決の5ステップ
+                        </div>
+                        <div class="card-content">
+                            <ul class="panga-list">
+                                <li>課題を具体的に明確化する</li>
+                                <li>お互いの立場と視点を尊重する</li>
+                                <li>複数の解決策を一緒に考える</li>
+                                <li>最適な方法を選び、実行する</li>
+                                <li>結果を振り返り、学びを共有する</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- チームリーダーの心得 -->
+        <div class="section" id="section-leader">
+            <h2 class="section-header">チームリーダーの心得</h2>
+
+            <div class="row">
+                <div class="col s12 m4">
+                    <div class="card accent1-theme scale-in">
+                        <div class="card-title">
+                            <i class="material-icons">workspace_premium</i>リーダーシップの基本
+                        </div>
+                        <div class="card-content">
+                            <ul class="panga-list">
+                                <li>率先垂範し、自らの行動で模範を示す</li>
+                                <li>各メンバーの強みと成長点を把握し、適切な役割を与える</li>
+                                <li>明確な目標とビジョンを示し、チームの方向性を共有する</li>
+                                <li>メンバーの意見に耳を傾け、一人ひとりの声を大切にする</li>
+                                <li>困難な状況でも冷静さを保ち、的確な判断を下す</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col s12 m4">
+                    <div class="card accent1-theme scale-in">
+                        <div class="card-title">
+                            <i class="material-icons">diversity_3</i>多様性を活かすチーム作り
+                        </div>
+                        <div class="card-content">
+                            <ul class="panga-list">
+                                <li>年齢や経験の差は「多様性」として尊重し、チームの強みに変える</li>
+                                <li>若手の新鮮な視点とベテランの経験を組み合わせ、革新と安定を両立する</li>
+                                <li>互いの技術や知識を教え合える環境を作り、全員の成長を促進する</li>
+                                <li>異なる意見や提案を歓迎し、より良いアイデアを生み出す土壌を育てる</li>
+                                <li>各メンバーが自分の強みを発揮できる場と機会を意識的に作る</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col s12 m4">
+                    <div class="card accent1-theme scale-in">
+                        <div class="card-title">
+                            <i class="material-icons">update</i>効果的なフィードバック
+                        </div>
+                        <div class="card-content">
+                            <ul class="panga-list">
+                                <li>良い点を具体的に褒め、さらに伸ばせるよう励ます</li>
+                                <li>改善点は非公開の場で伝え、明確な方向性を示す</li>
+                                <li>結果だけでなくプロセスも評価し、努力を認める</li>
+                                <li>定期的に1対1の対話の時間を設け、メンバーの声に耳を傾ける</li>
+                                <li>「何が」「どのように」改善できるかを具体的に伝える</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- お客様第一のサービス姿勢 -->
+        <div class="section" id="section-customer">
+            <h2 class="section-header">お客様第一のサービス姿勢</h2>
+
+            <div class="row">
+                <div class="col s12">
+                    <div class="card secondary-theme scale-in">
+                        <div class="card-title">
+                            <i class="material-icons">room_service</i>真のおもてなし精神
+                        </div>
+                        <div class="card-content">
+                            <ul class="panga-list">
+                                <li>お客様の質問や相談には最適な答えを提供する</li>
+                                <li>時にはPanga以外の商品やブランドを紹介することもためらわない</li>
+                                <li>売上よりもお客様の満足と信頼関係構築を優先する</li>
+                                <li>お客様の立場に立ち、本当に必要なものは何かを考える</li>
+                                <li>目先の売上より、長期的な信頼関係を大切にする</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h4>信頼を築く対応例</h4>
+
+            <div class="row">
+                <div class="col s12 m6">
+                    <div class="card accent2-theme scale-in">
+                        <div class="card-title">
+                            <i class="material-icons">restaurant_menu</i>料理に合う調味料は？
+                        </div>
+                        <div class="card-content">
+                            <ul class="panga-list">
+                                <li>お客様の作りたい料理と好みをしっかり確認</li>
+                                <li>Panga商品で最適なものを紹介</li>
+                                <li>より適した他社商品がある場合は正直に案内</li>
+                                <li>「お客様の食卓が豊かになること」を最優先に考える</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col s12 m6">
+                    <div class="card accent2-theme scale-in">
+                        <div class="card-title">
+                            <i class="material-icons">school</i>韓国料理初心者ですが？
+                        </div>
+                        <div class="card-content">
+                            <ul class="panga-list">
+                                <li>初心者でも使いやすい商品を優先して紹介</li>
+                                <li>具体的な使用方法や簡単レシピも添える</li>
+                                <li>お客様のライフスタイルに合わせた提案を心がける</li>
+                                <li>商品だけでなく、韓国食文化の魅力も伝える</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12 m4">
+                    <div class="card accent2-theme scale-in">
+                        <div class="card-title">
+                            <i class="material-icons">help_outline</i>商品の特徴は？
+                        </div>
+                        <div class="card-content">
+                            <ul class="panga-list">
+                                <li>3つのポイントで簡潔に説明</li>
+                                <li>具体的な使用方法を提案</li>
+                                <li>お客様の用途に合わせた活用法を伝える</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col s12 m4">
+                    <div class="card accent2-theme scale-in">
+                        <div class="card-title">
+                            <i class="material-icons">inventory_2</i>保存方法は？
+                        </div>
+                        <div class="card-content">
+                            <ul class="panga-list">
+                                <li>明確な保存条件（温度・場所）を説明</li>
+                                <li>賞味期限と開封後の期限を併せて案内</li>
+                                <li>保存時の注意点も丁寧に伝える</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col s12 m4">
+                    <div class="card accent2-theme scale-in">
+                        <div class="card-title">
+                            <i class="material-icons">cooking</i>調理方法は？
+                        </div>
+                        <div class="card-content">
+                            <ul class="panga-list">
+                                <li>基本の作り方をステップで説明</li>
+                                <li>季節や好みに合わせたアレンジ方法を提案</li>
+                                <li>より美味しく食べるためのコツや食べ合わせも伝える</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- クレーム対応の基本 -->
+        <div class="section" id="section-claim">
+            <h2 class="section-header">クレーム対応の基本</h2>
+
+            <div class="row">
+                <div class="col s12 m4">
+                    <div class="card accent1-theme scale-in">
+                        <div class="card-title">
+                            <i class="material-icons">psychology</i>基本姿勢
+                        </div>
+                        <div class="card-content">
+                            <ul class="panga-list">
+                                <li>お客様の声を最後まで丁寧に聴き、気持ちに寄り添う</li>
+                                <li>問題の本質を正確に把握し、最適な解決策を考える</li>
+                                <li>感情的にならず、冷静かつ誠実な対応を心がける</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col s12 m4">
+                    <div class="card accent1-theme scale-in">
+                        <div class="card-title">
+                            <i class="material-icons">checklist</i>対応ステップ
+                        </div>
+                        <div class="card-content">
+                            <ol class="numbered-list">
+                                <li>謝罪と傾聴：まずはお詫びし、お客様の話を途中で遮らない</li>
+                                <li>状況確認：「いつ」「どこで」「何が」起きたのかを明確に</li>
+                                <li>解決策提示：可能な対応策を具体的に説明</li>
+                                <li>フォローアップ：問題解決後もお客様の満足を確認</li>
+                                <li>再発防止：同じ問題が起きないよう改善策を考える</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col s12 m4">
+                    <div class="card accent1-theme scale-in">
+                        <div class="card-title">
+                            <i class="material-icons">key</i>権限の範囲
+                        </div>
+                        <div class="card-content">
+                            <ul class="panga-list">
+                                <li>5,000円以下の対応は現場判断で迅速に行う</li>
+                                <li>それ以上の対応が必要な場合はリーダーに相談</li>
+                                <li>お客様をお待たせする場合は必ず経過報告を行う</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 緊急時の対応 -->
+        <div class="section" id="section-emergency">
+            <h2 class="section-header">緊急時の対応</h2>
+
+            <div class="row">
+                <div class="col s12 m6">
+                    <div class="card primary-theme scale-in">
+                        <div class="card-title">
+                            <i class="material-icons">warning</i>基本の流れ
+                        </div>
+                        <div class="card-content">
+                            <ol class="numbered-list">
+                                <li>落ち着いて状況を確認</li>
+                                <li>リーダーに報告</li>
+                                <li>お客様の安全確保</li>
+                                <li>適切な初期対応</li>
+                                <li>誠実な説明</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col s12 m6">
+                    <div class="card primary-theme scale-in">
+                        <div class="card-title">
+                            <i class="material-icons">priority_high</i>注意点
+                        </div>
+                        <div class="card-content">
+                            <ul class="panga-list">
+                                <li>独断での判断を避ける</li>
+                                <li>常に冷静な対応を心がける</li>
+                                <li>報告・連絡・相談を忘れずに</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 大切な連絡先 -->
+        <div class="section" id="section-contact">
+            <h2 class="section-header">大切な連絡先</h2>
+
+            <div class="row">
+                <div class="col s12">
+                    <div class="card secondary-theme scale-in">
+                        <div class="card-title">
+                            <i class="material-icons">contact_phone</i>緊急時連絡先
+                        </div>
+                        <div class="card-content">
+                            <div class="collection">
+                                <a href="tel:09081997605" class="collection-item">
+                                    <span class="title">洪常務</span>
+                                    <p>090-8199-7605</p>
+                                </a>
+                                <a href="tel:09081997549" class="collection-item">
+                                    <span class="title">ユ室長</span>
+                                    <p>090-8199-7549</p>
+                                </a>
+                                <a href="tel:0667181100" class="collection-item">
+                                    <span class="title">店舗直通</span>
+                                    <p>06-6718-1100</p>
+                                </a>
+                                <a href="tel:0667555000" class="collection-item">
+                                    <span class="title">本社</span>
+                                    <p>06-6755-5000</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 毎日の心がけ -->
+        <div class="section" id="section-daily">
+            <h2 class="section-header">毎日の心がけ</h2>
+
+            <div class="row">
+                <div class="col s12">
+                    <div class="card accent2-theme scale-in">
+                        <div class="card-title">
+                            <i class="material-icons">self_improvement</i>自己振り返り
+                        </div>
+                        <div class="card-content">
+                            <p>このポケットガイドの追加項目を通じて、私たちPanga
+                                Crewは単なる「販売員」ではなく、韓国の食文化とお客様をつなぐ「ブランドアンバサダー」としての誇りを持ち、チーム一丸となってお客様に最高のPanga体験を提供していきましょう。
+                            </p>
+
+                            <p>毎日の終わりに、以下の3つの質問で自分自身を振り返ってみてください：</p>
+
+                            <div class="card-panel accent2-theme lighten-5">
+                                <ol class="numbered-list">
+                                    <li>今日、誰かの役に立つことができたか？</li>
+                                    <li>チームの一員として、自分の強みを活かせたか？</li>
+                                    <li>お客様に「また来たい」と思っていただける対応ができたか？</li>
+                                </ol>
+                            </div>
+
+                            <p class="center-align">共に成長し、共に韓国の味と温もりをお届けしていきましょう。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to Top Button -->
+    <div class="back-to-top" id="backToTop">
+        <i class="material-icons">keyboard_arrow_up</i>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Materialize コンポーネントの初期化
+            M.AutoInit();
+
+            // ランディングアニメーション
+            animateLanding();
+
+            // プリローダーを1秒表示した後にフェードアウト
+            setTimeout(function () {
+                const preloader = document.querySelector('.preloader-overlay');
+                preloader.classList.add('hidden');
+
+                // プリローダー終了後にすべてのセクションを表示
+                const sections = document.querySelectorAll('.section');
+                sections.forEach((section, index) => {
+                    setTimeout(() => {
+                        section.classList.add('visible');
+                    }, 150 * index);
+                });
+            }, 1000);
+
+            // スクロール検出によるナビゲーションバーの変化
+            const nav = document.querySelector('nav');
+            window.addEventListener('scroll', function () {
+                if (window.scrollY > 50) {
+                    nav.classList.add('scrolled');
+                } else {
+                    nav.classList.remove('scrolled');
+                }
+            });
+
+            // 目次トグル機能強化
+            const sidenavTrigger = document.querySelector('.sidenav-trigger');
+            const tocSidenav = document.getElementById('toc-sidenav');
+
+            if (sidenavTrigger && tocSidenav) {
+                sidenavTrigger.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    tocSidenav.classList.toggle('visible');
+
+                    // トグルボタンに回転アニメーションを追加
+                    this.querySelector('i').style.transition = 'transform 0.3s';
+                    if (tocSidenav.classList.contains('visible')) {
+                        this.querySelector('i').style.transform = 'rotate(90deg)';
+                    } else {
+                        this.querySelector('i').style.transform = 'rotate(0deg)';
+                    }
+                });
+            }
+
+            // 目次外クリックで閉じる
+            document.addEventListener('click', function (e) {
+                if (tocSidenav && !tocSidenav.contains(e.target) && !sidenavTrigger.contains(e
+                        .target)) {
+                    tocSidenav.classList.remove('visible');
+                    if (sidenavTrigger.querySelector('i')) {
+                        sidenavTrigger.querySelector('i').style.transform = 'rotate(0deg)';
+                    }
+                }
+            });
+
+            // 折りたたみヘッダーのアイコン回転
+            const collapsibleHeaders = document.querySelectorAll('.collapsible-header');
+            collapsibleHeaders.forEach(header => {
+                header.addEventListener('click', function () {
+                    this.classList.toggle('active');
+
+                    // クリックした時の波及効果
+                    createRippleEffect(this, event);
+                });
+            });
+
+            // カードクリック時の波及効果
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('click', function (event) {
+                    createRippleEffect(this, event);
+                });
+            });
+
+            // スクロール進行状況バー
+            const progressBar = document.getElementById('progressBar');
+            window.addEventListener('scroll', function () {
+                const winScroll = document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement
+                    .clientHeight;
+                const scrolled = (winScroll / height) * 100;
+
+                if (progressBar) {
+                    progressBar.style.width = scrolled + '%';
+
+                    // スクロール中にアクティブクラスを追加
+                    if (scrolled > 0 && scrolled < 100) {
+                        progressBar.classList.add('active');
+                    } else {
+                        progressBar.classList.remove('active');
+                    }
+                }
+
+                // トップに戻るボタンの表示/非表示
+                const backToTop = document.getElementById('backToTop');
+                if (backToTop) {
+                    if (winScroll > 300) {
+                        backToTop.classList.add('visible');
+                    } else {
+                        backToTop.classList.remove('visible');
+                    }
+                }
+
+                // 目次のアクティブアイテム更新
+                updateActiveTocItem(winScroll);
+
+                // スクロール時にセクションをアニメーション
+                animateSectionsOnScroll();
+            });
+
+            // トップに戻るボタン機能
+            const backToTopBtn = document.getElementById('backToTop');
+            if (backToTopBtn) {
+                backToTopBtn.addEventListener('click', function () {
+                    scrollToTop();
+                });
+            }
+
+            // 目次アイテムクリックナビゲーション
+            const tocItems = document.querySelectorAll('.toc-item');
+            tocItems.forEach(item => {
+                item.addEventListener('click', function () {
+                    const targetId = this.getAttribute('data-target');
+                    const targetElement = document.getElementById(targetId);
+
+                    // 目次を閉じる（モバイル用）
+                    if (tocSidenav) {
+                        tocSidenav.classList.remove('visible');
+                        if (sidenavTrigger && sidenavTrigger.querySelector('i')) {
+                            sidenavTrigger.querySelector('i').style.transform = 'rotate(0deg)';
+                        }
+                    }
+
+                    // ターゲットセクションにスクロール
+                    if (targetElement) {
+                        smoothScrollTo(targetElement.offsetTop - 80);
+                    }
+                });
+            });
+
+            // カードのアニメーション遅延を追加
+            addAnimationDelays();
+
+            // 視差効果を各セクションに追加
+            initParallaxEffect();
+
+            // ホバーエフェクトをカードに追加
+            initCardHoverEffects();
+        });
+
+        // スムーズスクロール関数
+        function smoothScrollTo(targetPosition) {
+            const startPosition = window.pageYOffset;
+            const distance = targetPosition - startPosition;
+            const duration = 800;
+            let start = null;
+
+            function step(timestamp) {
+                if (!start) start = timestamp;
+                const progress = timestamp - start;
+                const percentage = Math.min(progress / duration, 1);
+                const ease = easeOutCubic(percentage);
+
+                window.scrollTo(0, startPosition + distance * ease);
+
+                if (progress < duration) {
+                    window.requestAnimationFrame(step);
+                }
+            }
+
+            window.requestAnimationFrame(step);
+        }
+
+        // イージング関数
+        function easeOutCubic(t) {
+            return 1 - Math.pow(1 - t, 3);
+        }
+
+        // トップにスクロール関数
+        function scrollToTop() {
+            smoothScrollTo(0);
+        }
+
+        // アクティブな目次アイテムの更新
+        function updateActiveTocItem(scrollPosition) {
+            const sections = document.querySelectorAll('.section');
+            let currentSection = '';
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+
+                if (scrollPosition >= sectionTop - 200 && scrollPosition < sectionTop + sectionHeight - 200) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+
+            const tocItems = document.querySelectorAll('.toc-item');
+            tocItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('data-target') === currentSection) {
+                    item.classList.add('active');
+
+                    // アクティブになった項目に特別なエフェクトを追加
+                    addPulseEffect(item);
+                }
+            });
+        }
+        // 以下の関数定義がスクリプトに追加する必要があります
+
+        // ランディングアニメーション
+        // ランディングアニメーション無効化
+        function animateLanding() {
+            const header = document.querySelector('.navbar-fixed');
+            if (header) {
+                // アニメーションなしで即時表示
+                header.style.opacity = '1';
+                header.style.transform = 'translateY(0)';
+            }
+        }
+
+        // リップルエフェクト生成
+        // リップルエフェクト生成 - 速度を高速化
+        function createRippleEffect(element, event) {
+            const ripple = document.createElement('span');
+            const rect = element.getBoundingClientRect();
+
+            const size = Math.max(rect.width, rect.height);
+            const x = event.clientX - rect.left - size / 2;
+            const y = event.clientY - rect.top - size / 2;
+
+            ripple.style.width = ripple.style.height = `${size}px`;
+            ripple.style.left = `${x}px`;
+            ripple.style.top = `${y}px`;
+            ripple.className = 'ripple';
+
+            // スタイルをインラインで追加
+            ripple.style.position = 'absolute';
+            ripple.style.borderRadius = '50%';
+            ripple.style.pointerEvents = 'none';
+            ripple.style.backgroundColor = 'rgba(255, 255, 255, 0.7)';
+            ripple.style.transform = 'scale(0)';
+            ripple.style.animation = 'ripple-effect 0.4s linear'; // 0.6s から 0.4s に短縮
+
+            // キーフレームをスタイルシートに追加
+            if (!document.querySelector('#ripple-animation')) {
+                const style = document.createElement('style');
+                style.id = 'ripple-animation';
+                style.innerHTML = `
+            @keyframes ripple-effect {
+                to {
+                    transform: scale(2);
+                    opacity: 0;
+                }
+            }
+        `;
+                document.head.appendChild(style);
+            }
+
+            // リップル要素を相対位置に設定
+            if (window.getComputedStyle(element).position === 'static') {
+                element.style.position = 'relative';
+            }
+            element.style.overflow = 'hidden';
+
+            // 既存のリップル効果をクリア
+            const existingRipples = element.getElementsByClassName('ripple');
+            if (existingRipples.length > 0) {
+                Array.from(existingRipples).forEach(oldRipple => {
+                    oldRipple.remove();
+                });
+            }
+
+            element.appendChild(ripple);
+
+            // アニメーション終了後にリップル要素を削除（時間も短縮）
+            setTimeout(() => {
+                ripple.remove();
+            }, 400); // 600ms から 400ms に短縮
+        }
+
+        // パルスエフェクト追加
+        function addPulseEffect(element) {
+            // 既存のパルスエフェクトを削除
+            element.classList.remove('pulsing');
+
+            // パルスアニメーションのスタイルをスタイルシートに追加
+            if (!document.querySelector('#pulse-animation')) {
+                const style = document.createElement('style');
+                style.id = 'pulse-animation';
+                style.innerHTML = `
+            @keyframes pulse {
+                0% {
+                    transform: scale(1);
+                }
+                50% {
+                    transform: scale(1.02);
+                }
+                100% {
+                    transform: scale(1);
+                }
+            }
+            .pulsing {
+                animation: pulse 0.8s ease-in-out;
+            }
+        `;
+                document.head.appendChild(style);
+            }
+
+            // リフローを強制してアニメーションをリセット
+            void element.offsetWidth;
+
+            // パルスクラスを追加
+            element.classList.add('pulsing');
+        }
+
+        // その他の必要な関数定義も追加
+        function addAnimationDelays() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card) => {
+                // 遅延なしで即時アニメーション
+                card.style.opacity = '1';
+                card.classList.add('scale-in');
+
+                // 遅延クラスを削除（もし付いていれば）
+                card.classList.remove('delay-1', 'delay-2', 'delay-3', 'delay-4', 'delay-5');
+            });
+        }
+
+        function observeElement(element) {
+            // 要素を即時表示
+            element.style.opacity = '1';
+            element.classList.add('scale-in');
+        }
+
+        // セクションスクロールアニメーションを簡略化
+        function animateSectionsOnScroll() {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                // セクションをすぐに表示
+                section.classList.add('visible');
+
+                // ヘッダーのアニメーションを無効化
+                const header = section.querySelector('.section-header');
+                if (header) {
+                    header.style.opacity = '1';
+                    header.style.transform = 'translateX(0)';
+                }
+            });
+        }
+
+        function initParallaxEffect() {}
+
+        function initCardHoverEffects() {
+            const cards = document.querySelectorAll('.card');
+
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function () {
+                    // 単純な拡大効果のみ適用（3D効果なし）
+                    this.style.transition = 'transform 0.3s ease, box-shadow 0.3s ease';
+                    this.style.transform = 'translateY(-5px)';
+                    this.style.boxShadow = 'var(--panga-shadow-hover)';
+                });
+
+                card.addEventListener('mouseleave', function () {
+                    // 効果をリセット
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = 'var(--panga-shadow-md)';
+                });
+            });
+        }
+
+        // handleMouseMove関数は不要になりますが、エラー防止のために空の関数を残しておく
+        function handleMouseMove(e) {
+            // 何もしない
+        }
+    </script>
+</body>
+
+</html>
